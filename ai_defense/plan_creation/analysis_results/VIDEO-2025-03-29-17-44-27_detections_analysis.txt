@@ -1,0 +1,48 @@
+THREAT ANALYSIS REPORT
+Generated on: 2025-03-30 08:53:02
+Source file: jsons/VIDEO-2025-03-29-17-44-27_detections.json
+================================================================================
+
+ORIGINAL DETECTION DATA:
+----------------------------------------
+{
+  "video_info": {
+    "filename": "VIDEO-2025-03-29-17-44-27.mp4",
+    "resolution": "960x544",
+    "fps": 25,
+    "total_frames": 250,
+    "processed_frames": 250
+  },
+  "unique_objects": {
+    "boat": 246,
+    "bird": 35,
+    "person": 733,
+    "umbrella": 26,
+    "car": 130
+  }
+}
+
+THREAT ANALYSIS:
+----------------------------------------
+1. THREAT IDENTIFICATION:
+- High Threat Objects: boat (Count: 246)
+- Medium Threat Objects: person (Count: 733), car (Count: 130)
+- Low Threat Objects: bird (Count: 35), umbrella (Count: 26)
+
+2. RISK ASSESSMENT:
+- Overall Threat Level: HIGH
+  * Presence of high-threat objects requires immediate attention
+- Video Duration: 10.0 seconds
+- Resolution: 960x544
+
+3. RECOMMENDATIONS:
+- IMMEDIATE ACTIONS:
+  * Alert maritime security forces
+  * Deploy rapid response team
+  * Establish 1000m safety perimeter
+  * Initiate continuous monitoring
+
+4. SPECIAL CONSIDERATIONS:
+- WARNING: Large number of personnel with watercraft - assess for suspicious activity
+- Temporal Context: 10.0 seconds of surveillance data
+- Detection Rate: 117.0 objects per second average

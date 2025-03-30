@@ -1,0 +1,43 @@
+THREAT ANALYSIS REPORT
+Generated on: 2025-03-30 08:53:02
+Source file: jsons/VIDEO-2025-03-29-17-28-58_detections.json
+================================================================================
+
+ORIGINAL DETECTION DATA:
+----------------------------------------
+{
+  "video_info": {
+    "filename": "VIDEO-2025-03-29-17-28-58.mp4",
+    "resolution": "960x544",
+    "fps": 30,
+    "total_frames": 301,
+    "processed_frames": 301
+  },
+  "unique_objects": {
+    "person": 1659,
+    "car": 516,
+    "truck": 1
+  }
+}
+
+THREAT ANALYSIS:
+----------------------------------------
+1. THREAT IDENTIFICATION:
+- Medium Threat Objects: person (Count: 1659), car (Count: 516), truck (Count: 1)
+
+2. RISK ASSESSMENT:
+- Overall Threat Level: MEDIUM
+  * Potential security concerns detected
+- Video Duration: 10.0 seconds
+- Resolution: 960x544
+
+3. RECOMMENDATIONS:
+- ACTIONS REQUIRED:
+  * Increase surveillance
+  * Notify local authorities
+  * Maintain 500m observation zone
+  * Document all activities
+
+4. SPECIAL CONSIDERATIONS:
+- Temporal Context: 10.0 seconds of surveillance data
+- Detection Rate: 216.9 objects per second average

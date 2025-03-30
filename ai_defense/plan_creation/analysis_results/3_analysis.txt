@@ -1,0 +1,45 @@
+THREAT ANALYSIS REPORT
+Generated on: 2025-03-30 08:53:02
+Source file: jsons/3.json
+================================================================================
+
+ORIGINAL DETECTION DATA:
+----------------------------------------
+{
+  "unique_objects": {
+    "person": 40,
+    "cow": 4,
+    "horse": 7,
+    "sheep": 1
+  },
+  "video_info": {
+    "total_frames": 192,
+    "input_path": "/root/test_videos/VideoFX Mar 29 2025.mp4",
+    "output_path": "/root/processed_output/VideoFX Mar 29 2025_detected.mp4",
+    "fps": 24,
+    "resolution": "1280x720"
+  }
+}
+
+THREAT ANALYSIS:
+----------------------------------------
+1. THREAT IDENTIFICATION:
+- Medium Threat Objects: person (Count: 40)
+- Low Threat Objects: cow (Count: 4), horse (Count: 7), sheep (Count: 1)
+
+2. RISK ASSESSMENT:
+- Overall Threat Level: MEDIUM
+  * Potential security concerns detected
+- Video Duration: 8.0 seconds
+- Resolution: 1280x720
+
+3. RECOMMENDATIONS:
+- ACTIONS REQUIRED:
+  * Increase surveillance
+  * Notify local authorities
+  * Maintain 500m observation zone
+  * Document all activities
+
+4. SPECIAL CONSIDERATIONS:
+- Temporal Context: 8.0 seconds of surveillance data
+- Detection Rate: 6.5 objects per second average

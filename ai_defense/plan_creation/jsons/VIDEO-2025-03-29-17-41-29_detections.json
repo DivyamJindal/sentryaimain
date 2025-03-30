@@ -1,0 +1,18 @@
+{
+  "video_info": {
+    "filename": "VIDEO-2025-03-29-17-41-29.mp4",
+    "resolution": "960x544",
+    "fps": 30,
+    "total_frames": 301,
+    "processed_frames": 301
+  },
+  "unique_objects": {
+    "person": 1532,
+    "bicycle": 26,
+    "bus": 4,
+    "car": 14,
+    "truck": 107,
+    "kite": 1,
+    "airplane": 2
+  }
+}

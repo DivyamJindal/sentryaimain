@@ -1,0 +1,46 @@
+THREAT ANALYSIS REPORT
+Generated on: 2025-03-30 08:53:02
+Source file: jsons/2.json
+================================================================================
+
+ORIGINAL DETECTION DATA:
+----------------------------------------
+{
+  "unique_objects": {
+    "Mines": 1,
+    "Drone": 3,
+    "rocks": 4,
+    "Fish and plants": 5
+  },
+  "video_info": {
+    "total_frames": 192,
+    "input_path": "/root/test_videos/VideoFX Generate 30s Mar 29 2025.mp4",
+    "output_path": "/root/processed_output/VideoFX Generate 30s Mar 29 2025_detected.mp4",
+    "fps": 24,
+    "resolution": "1280x720"
+  }
+}
+
+THREAT ANALYSIS:
+----------------------------------------
+1. THREAT IDENTIFICATION:
+- High Threat Objects: Mines (Count: 1), Drone (Count: 3)
+- Low Threat Objects: rocks (Count: 4), Fish and plants (Count: 5)
+
+2. RISK ASSESSMENT:
+- Overall Threat Level: HIGH
+  * Presence of high-threat objects requires immediate attention
+- Video Duration: 8.0 seconds
+- Resolution: 1280x720
+
+3. RECOMMENDATIONS:
+- IMMEDIATE ACTIONS:
+  * Alert maritime security forces
+  * Deploy rapid response team
+  * Establish 1000m safety perimeter
+  * Initiate continuous monitoring
+
+4. SPECIAL CONSIDERATIONS:
+- CRITICAL: Potential coordinated threat detected (Mine + Drone combination)
+- Temporal Context: 8.0 seconds of surveillance data
+- Detection Rate: 1.6 objects per second average
