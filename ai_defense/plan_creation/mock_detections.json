@@ -1,0 +1,49 @@
+[
+  {
+    "objects_detected": [
+      {
+        "type": "drone",
+        "confidence": 0.92,
+        "bbox": [150.0, 200.0, 250.0, 300.0]
+      }
+    ],
+    "threat_level": "medium",
+    "coordinates": {
+      "latitude": 34.0522,
+      "longitude": -118.2437,
+      "altitude": 150.0
+    },
+    "environment_conditions": {
+      "time_of_day": "dusk",
+      "weather": "clear",
+      "camera_id": "sentry_cam_01"
+    },
+    "raw_description": "Unidentified drone detected flying at 150m altitude near sector 4."
+  },
+  {
+    "objects_detected": [
+      {
+        "type": "boat",
+        "confidence": 0.85,
+        "bbox": [800.0, 600.0, 950.0, 700.0]
+      },
+      {
+        "type": "person",
+        "confidence": 0.78,
+        "bbox": [820.0, 610.0, 840.0, 650.0]
+      }
+    ],
+    "threat_level": "high",
+    "coordinates": {
+      "latitude": 34.0500,
+      "longitude": -118.2400,
+      "altitude": 5.0
+    },
+    "environment_conditions": {
+      "time_of_day": "night",
+      "weather": "foggy",
+      "camera_id": "sentry_cam_03"
+    },
+    "raw_description": "Suspicious boat with person detected moving slowly towards restricted zone during foggy night conditions."
+  }
+]

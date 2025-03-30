@@ -1,0 +1,92 @@
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  min-height: 100vh;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+
+.gradient-text {
+  background: linear-gradient(
+    45deg,
+    #1e3a8a 0%,    /* Darker blue */
+    #3b82f6 25%,   /* Bright blue */
+    #60a5fa 50%,   /* Light blue */
+    #3b82f6 75%,   /* Bright blue */
+    #1e3a8a 100%   /* Darker blue */
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  font-weight: 800;
+  text-shadow: 0 0 25px rgba(59, 130, 246, 0.5);
+  animation: shine 3s linear infinite;
+}
+
+@keyframes shine {
+  from {
+    background-position: 0%;
+  }
+  to {
+    background-position: 200%;
+  }
+}
+
+@keyframes rotate {
+  100% {
+    transform: rotate(1turn);
+  }
+}
+
+.animated-border {
+  position: relative;
+  z-index: 0;
+  border-radius: 12px;
+  overflow: hidden;
+  padding: 2px;
+  box-shadow: 0 0 20px rgba(255, 255, 255, 0.15);
+}
+
+.animated-border::before {
+  content: '';
+  position: absolute;
+  z-index: -2;
+  left: -50%;
+  top: -50%;
+  width: 200%;
+  height: 200%;
+  background-color: transparent;
+  background-repeat: no-repeat;
+  background-size: 50% 50%;
+  background-position: 0 0;
+  background-image: conic-gradient(
+    from 0deg,
+    transparent 0%,
+    #3b82f6 20%,    /* Bright blue */
+    #60a5fa 40%,    /* Light blue */
+    #3b82f6 60%,    /* Bright blue */
+    transparent 80%
+  );
+  animation: rotate 4s linear infinite;
+  filter: drop-shadow(0 0 15px rgba(255, 255, 255, 0.3));
+}
+
+.animated-border::after {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  left: 2px;
+  top: 2px;
+  width: calc(100% - 4px);
+  height: calc(100% - 4px);
+  background: #1e3a8a;  /* Dark blue background */
+  border-radius: 10px;
+  box-shadow: inset 0 0 20px rgba(255, 255, 255, 0.1);
+}

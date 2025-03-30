@@ -1,0 +1,3 @@
+[submodule "gym-webots-drone"]
+	path = gym-webots-drone
+	url = https://github.com/angel-ayala/gym-webots-drone.git
