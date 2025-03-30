@@ -60,3 +60,4 @@ yarn-error.log*
 processed_output/
 test_videos/
 camera/yolov8.pt
+camera/yolov8x.pt
