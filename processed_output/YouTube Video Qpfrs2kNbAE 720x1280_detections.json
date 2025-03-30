@@ -1,0 +1,17 @@
+{
+    "unique_objects": {
+        "person": 74,
+        "truck": 7,
+        "car": 3,
+        "boat": 4,
+        "bird": 9,
+        "horse": 1
+    },
+    "video_info": {
+        "total_frames": 787,
+        "input_path": "/root/test_videos/YouTube Video Qpfrs2kNbAE 720x1280.mp4",
+        "output_path": "/root/processed_output/YouTube Video Qpfrs2kNbAE 720x1280_detected.mp4",
+        "fps": 24,
+        "resolution": "720x1280"
+    }
+}
