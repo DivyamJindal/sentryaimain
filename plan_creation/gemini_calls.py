@@ -57,7 +57,7 @@ def transcribe(client, audio_file_path):
         
         # Generate content with the text prompt and audio part
         response = client.models.generate_content(
-            model="gemini-pro",
+            model="gemini-2.0-flash",
             contents=[
                 "Please transcribe this audio recording accurately.",
                 audio_part
