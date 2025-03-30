@@ -59,3 +59,4 @@ yarn-error.log*
 *.mp4
 processed_output/
 test_videos/
+camera/yolov8.pt
