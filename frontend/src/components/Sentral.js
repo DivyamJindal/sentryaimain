@@ -10,110 +10,74 @@ const Sentral = ({ detectionData, videoId }) => {
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState('');
   const [isListening, setIsListening] = useState(false);
-  const recognitionRef = useRef(null);
-  const [isSpeechSupported, setIsSpeechSupported] = useState(false);
+  const mediaRecorderRef = useRef(null);
+  const audioChunksRef = useRef([]);
+  const streamRef = useRef(null);
 
-  // Initialize speech recognition
+  // Clean up function
   useEffect(() => {
-    try {
-      // Check if speech recognition is supported
-      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-      if (!SpeechRecognition) {
-        console.error('Speech recognition not supported');
-        setIsSpeechSupported(false);
-        return;
-      }
-
-      recognitionRef.current = new SpeechRecognition();
-      recognitionRef.current.continuous = true;
-      recognitionRef.current.interimResults = true;
-      recognitionRef.current.lang = 'en-US';
-
-      recognitionRef.current.onstart = () => {
-        console.log('Speech recognition started');
-        setIsListening(true);
-      };
-
-      recognitionRef.current.onend = () => {
-        console.log('Speech recognition ended');
-        setIsListening(false);
-      };
-
-      recognitionRef.current.onresult = async (event) => {
-        console.log('Speech recognition result received');
-        const transcript = Array.from(event.results)
-          .map(result => result[0])
-          .map(result => result.transcript)
-          .join('');
-
-        console.log('Transcript:', transcript);
-        setInput(transcript);
-        
-        // If this is a final result, send to Gemini
-        if (event.results[event.results.length - 1].isFinal) {
-          console.log('Final result, sending to Gemini:', transcript);
-          await handleVoiceChat(transcript);
-          setInput(''); // Clear input after sending
-        }
-      };
-
-      recognitionRef.current.onerror = (event) => {
-        console.error('Speech recognition error:', event.error);
-        if (event.error === 'not-allowed') {
-          setMessages(prev => [...prev, {
-            text: "Please allow microphone access to use voice chat.",
-            sender: 'system',
-            timestamp: new Date()
-          }]);
-        } else if (event.error === 'no-speech') {
-          console.log('No speech detected');
-        } else {
-          setMessages(prev => [...prev, {
-            text: `Speech recognition error: ${event.error}. Please try again.`,
-            sender: 'system',
-            timestamp: new Date()
-          }]);
-        }
-        setIsListening(false);
-      };
-
-      setIsSpeechSupported(true);
-    } catch (error) {
-      console.error('Error initializing speech recognition:', error);
-      setIsSpeechSupported(false);
-    }
-
     return () => {
-      if (recognitionRef.current) {
-        recognitionRef.current.stop();
+      // Stop any ongoing recording when component unmounts
+      if (streamRef.current) {
+        streamRef.current.getTracks().forEach(track => track.stop());
       }
     };
   }, []);
 
   const toggleListening = async () => {
     try {
-      if (!isSpeechSupported) {
-        setMessages(prev => [...prev, {
-          text: "Speech recognition is not supported in your browser. Please use Chrome or Edge.",
-          sender: 'system',
-          timestamp: new Date()
-        }]);
-        return;
-      }
-
       if (isListening) {
-        console.log('Stopping speech recognition');
-        recognitionRef.current.stop();
-      } else {
-        console.log('Starting speech recognition');
-        // Request microphone permission first
-        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-        stream.getTracks().forEach(track => track.stop()); // Stop the stream immediately
+        console.log('Stopping audio recording');
+        // Stop recording
+        if (mediaRecorderRef.current && mediaRecorderRef.current.state !== 'inactive') {
+          mediaRecorderRef.current.stop();
+        }
         
-        recognitionRef.current.start();
+        // Stop microphone access
+        if (streamRef.current) {
+          streamRef.current.getTracks().forEach(track => track.stop());
+          streamRef.current = null;
+        }
+        
+        setIsListening(false);
+      } else {
+        console.log('Starting audio recording');
+        // Request microphone permission
+        streamRef.current = await navigator.mediaDevices.getUserMedia({ audio: true });
+        
+        // Create media recorder
+        const mediaRecorder = new MediaRecorder(streamRef.current);
+        mediaRecorderRef.current = mediaRecorder;
+        audioChunksRef.current = [];
+        
+        // Set up event handlers
+        mediaRecorder.ondataavailable = (event) => {
+          if (event.data.size > 0) {
+            audioChunksRef.current.push(event.data);
+          }
+        };
+        
+        mediaRecorder.onstop = async () => {
+          console.log('MediaRecorder stopped, processing audio');
+          if (audioChunksRef.current.length === 0) {
+            console.log('No audio data recorded');
+            return;
+          }
+          
+          // Create audio blob from recorded chunks
+          const audioBlob = new Blob(audioChunksRef.current, { type: 'audio/mp3' });
+          audioChunksRef.current = [];
+          
+          // Process the recorded audio
+          await handleAudioUpload(audioBlob);
+        };
+        
+        // Start recording
+        mediaRecorder.start();
+        setIsListening(true);
       }
     } catch (error) {
-      console.error('Error toggling speech recognition:', error);
+      console.error('Error toggling audio recording:', error);
       if (error.name === 'NotAllowedError') {
         setMessages(prev => [...prev, {
           text: "Please allow microphone access to use voice chat.",
@@ -131,6 +95,73 @@ const Sentral = ({ detectionData, videoId }) => {
     }
   };
 
+  const handleAudioUpload = async (audioBlob) => {
+    try {
+      // Show user that we're processing their audio
+      setMessages(prev => [...prev, {
+        text: "Processing your voice input...",
+        sender: 'system',
+        timestamp: new Date()
+      }]);
+      
+      // Create FormData and append the audio blob
+      const formData = new FormData();
+      formData.append('audio', audioBlob, 'recording.mp3');
+      
+      // Add threat data if available
+      if (detectionData) {
+        formData.append('threatData', JSON.stringify(detectionData));
+      }
+      
+      // Send to our custom endpoint
+      const response = await fetch('http://localhost:5003/api/voice-upload', {
+        method: 'POST',
+        body: formData
+      });
+      
+      const data = await response.json();
+      
+      if (data.success) {
+        // Add transcription to chat
+        setMessages(prev => prev.filter(msg => 
+          msg.text !== "Processing your voice input..." || msg.sender !== 'system'
+        ));
+        
+        setMessages(prev => [...prev, {
+          text: data.transcription,
+          sender: 'user',
+          timestamp: new Date()
+        }]);
+        
+        // Add AI response to chat
+        setMessages(prev => [...prev, {
+          text: data.response,
+          sender: 'ai',
+          timestamp: new Date()
+        }]);
+        
+        // Speak the response
+        const utterance = new SpeechSynthesisUtterance(data.response);
+        utterance.rate = 1.0;
+        utterance.pitch = 1.0;
+        window.speechSynthesis.speak(utterance);
+      } else {
+        throw new Error(data.error || 'Unknown error');
+      }
+    } catch (error) {
+      console.error('Error in audio upload:', error);
+      setMessages(prev => prev.filter(msg => 
+        msg.text !== "Processing your voice input..." || msg.sender !== 'system'
+      ));
+      
+      setMessages(prev => [...prev, {
+        text: "Sorry, I encountered an error processing your voice input.",
+        sender: 'system',
+        timestamp: new Date()
+      }]);
+    }
+  };
+
   const handleVoiceChat = async (userMessage) => {
     if (!userMessage.trim()) return;
 
@@ -142,7 +173,7 @@ const Sentral = ({ detectionData, videoId }) => {
     }]);
 
     try {
-      const response = await fetch('http://localhost:5002/api/voice-chat', {
+      const response = await fetch('http://localhost:5003/api/voice-chat', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -200,14 +231,16 @@ const Sentral = ({ detectionData, videoId }) => {
       - Medium Threat Objects: ${Object.entries(detectionData.unique_objects)
         .filter(([obj]) => ['truck', 'car', 'airplane', 'person'].includes(obj))
         .map(([obj, count]) => `${obj} (${count})`).join(', ')}
-
+      
       2. RISK ASSESSMENT:
-      - Overall Threat Level: ${Object.keys(detectionData.unique_objects).some(obj => ['Mines', 'Drone', 'boat'].includes(obj)) ? 'HIGH' : 'MEDIUM'}
+      - Overall Threat Level: ${Object.keys(detectionData.unique_objects).some(obj => 
+        ['Mines', 'Drone', 'boat'].includes(obj)) ? 'HIGH' : 'MEDIUM'}
       - Video Duration: ${detectionData.video_info.total_frames / detectionData.video_info.fps} seconds
       - Resolution: ${detectionData.video_info.resolution}
 
       3. RECOMMENDATIONS:
-      ${Object.keys(detectionData.unique_objects).some(obj => ['Mines', 'Drone', 'boat'].includes(obj)) ? 
+      ${Object.keys(detectionData.unique_objects).some(obj => 
+        ['Mines', 'Drone', 'boat'].includes(obj)) ? 
         '- IMMEDIATE ACTIONS:\n  * Alert maritime security forces\n  * Deploy rapid response team\n  * Establish 1000m safety perimeter' :
         '- STANDARD PROCEDURES:\n  * Continue monitoring\n  * Document observations'}`;
 
